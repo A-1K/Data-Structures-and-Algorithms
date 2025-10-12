@@ -1,79 +1,139 @@
-#include <iostream>
-#include <vector>
+#include <bits/stdc++.h>
+
 using namespace std;
 
-struct Node {
-    int data;
-    struct Node* next;
+class SinglyLinkedListNode {
+    public:
+        int data;
+        SinglyLinkedListNode *next;
+
+        SinglyLinkedListNode(int node_data) {
+            this->data = node_data;
+            this->next = nullptr;
+        }
 };
 
-struct Node* head;
+class SinglyLinkedList {
+    public:
+        SinglyLinkedListNode *head;
+        SinglyLinkedListNode *tail;
 
-void Insert(int data) {
-
-    // allocate and fill new node
-    Node* temp1 = new Node;
-    temp1->data = data;
-    temp1->next = NULL;   // because it will be last
-
-    if (head == NULL) {
-        // if list is empty, new node becomes head
-        head = temp1;
-    } else {
-        // otherwise traverse to the end and append
-        Node* temp = head;
-        while (temp->next != NULL) {
-            temp = temp->next;
+        SinglyLinkedList() {
+            this->head = nullptr;
+            this->tail = nullptr;
         }
-        temp->next = temp1;
+
+        void insert_node(int node_data) {
+            SinglyLinkedListNode* node = new SinglyLinkedListNode(node_data);
+
+            if (!this->head) {
+                this->head = node;
+            } else {
+                this->tail->next = node;
+            }
+
+            this->tail = node;
+        }
+};
+
+void print_singly_linked_list(SinglyLinkedListNode* node, string sep, ofstream& fout) {
+    while (node) {
+        fout << node->data;
+
+        node = node->next;
+
+        if (node) {
+            fout << sep;
+        }
     }
 }
-void Print() {
-    Node* temp = head;
-    while (temp != NULL) {
-        cout << temp->data << endl;
-        temp = temp->next;
+
+void free_singly_linked_list(SinglyLinkedListNode* node) {
+    while (node) {
+        SinglyLinkedListNode* temp = node;
+        node = node->next;
+
+        free(temp);
     }
 }
+ 
+/*
+ * Complete the 'deleteNode' function below.
+ *
+ * The function is expected to return an INTEGER_SINGLY_LINKED_LIST.
+ * The function accepts following parameters:
+ *  1. INTEGER_SINGLY_LINKED_LIST llist
+ *  2. INTEGER position
+ */
 
-void Delete (int n) {
+/*
+ * For your reference:
+ *
+ * SinglyLinkedListNode {
+ *     int data;
+ *     SinglyLinkedListNode* next;
+ * };
+ *
+ */
+
+SinglyLinkedListNode* deleteNode(SinglyLinkedListNode* llist, int position) {
     
-    struct Node* temp1 = head;
-
-    if (n == 1) {
-        head = temp1->next;
-        delete temp1;
-        return;
+    if (llist == NULL) { // for empty list, no node to delete
+        return llist;
     }
     
-    for (int i = 0; i<n-2; i++) {
-        temp1 = temp1->next;
+    SinglyLinkedListNode* temp = llist;
+    
+    if (position == 0) { // deleting head
+        SinglyLinkedListNode* nextHead = llist->next;
+        delete temp; // delete current head
+        return nextHead;
     }
-
-    struct Node* temp2 = temp1->next;
-    temp1->next = temp2->next;
+    
+    for (int i = 0; i < position-1; i++) {
+        temp = temp->next; //change node's next to skip the node being removed
+    }
+    
+    SinglyLinkedListNode* temp2 = temp->next; // node to be deleted, after the node that we linked before
+    temp->next = temp2->next; // connect the previous node to node 
     
     delete temp2;
-
-
+    
+    return llist;
+    
+        
 }
-
 
 int main()
 {
-    head = NULL; // list is empty initally
-    Insert(2); // 
-    Insert(4); // 
-    Insert(6); //
-    Insert(5); // 
+    ofstream fout(getenv("OUTPUT_PATH"));
 
-    Print();
-    int n; 
-    cout << "Enter position:";
-    cin >> n;
-    
-    Delete(n);
-    Print();
+    SinglyLinkedList* llist = new SinglyLinkedList();
+
+    int llist_count;
+    cin >> llist_count;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    for (int i = 0; i < llist_count; i++) {
+        int llist_item;
+        cin >> llist_item;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+        llist->insert_node(llist_item);
+    }
+
+    int position;
+    cin >> position;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    SinglyLinkedListNode* llist1 = deleteNode(llist->head, position);
+
+    print_singly_linked_list(llist1, " ", fout);
+    fout << "\n";
+
+    free_singly_linked_list(llist1);
+
+    fout.close();
 
     return 0;
 }
