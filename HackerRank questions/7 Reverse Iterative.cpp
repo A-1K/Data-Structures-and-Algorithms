@@ -80,10 +80,10 @@ SinglyLinkedListNode* reverse(SinglyLinkedListNode* llist) {
     prev = NULL;
     
     while (current != NULL) {
-        next = current->next;
-        current->next = prev;
-        prev = current;
-        current = next;
+        next = current->next; // var to store next node's pointer, else link would be broken
+        current->next = prev; // set link of node to previous node's
+        prev = current; // move forward 
+        current = next; // ... i just keep moving forward
     }
     
     llist = prev;
@@ -126,3 +126,4 @@ int main()
 
     return 0;
 }
+
