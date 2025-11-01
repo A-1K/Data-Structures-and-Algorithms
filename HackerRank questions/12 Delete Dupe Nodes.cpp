@@ -78,7 +78,7 @@ SinglyLinkedListNode* removeDuplicates(SinglyLinkedListNode* llist) {
     
     
     SinglyLinkedListNode* temp = llist;
-    SinglyLinkedListNode* link = llist;
+    // SinglyLinkedListNode* link = llist;
 
 
     while (temp->next != NULL){
@@ -87,8 +87,16 @@ SinglyLinkedListNode* removeDuplicates(SinglyLinkedListNode* llist) {
         if (temp->data == temp->next->data) {
     
             SinglyLinkedListNode* temp2 = temp->next;
-            temp->next = temp2->next;
-            // delete temp2;
+            
+            if (temp2->next == NULL) {  // case for deleting at tail, wonky seg faults otherwise
+                temp->next = NULL;
+                break;
+            }
+            
+            else {
+                temp->next = temp2->next;
+                delete temp2;
+            }           
         }
 
         
