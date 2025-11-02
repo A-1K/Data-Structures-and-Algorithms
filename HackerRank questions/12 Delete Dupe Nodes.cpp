@@ -79,33 +79,42 @@ SinglyLinkedListNode* removeDuplicates(SinglyLinkedListNode* llist) {
     
     SinglyLinkedListNode* temp = llist;
     // SinglyLinkedListNode* link = llist;
+    SinglyLinkedListNode* head = llist;
 
 
     while (temp->next != NULL){
         
+                  //  temp = llist;        
+        bool deleted = false;
         
         if (temp->data == temp->next->data) {
     
             SinglyLinkedListNode* temp2 = temp->next;
             
-            if (temp2->next == NULL) {  // case for deleting at tail, wonky seg faults otherwise
+            if (temp2->next == NULL) {
                 temp->next = NULL;
                 break;
             }
             
             else {
                 temp->next = temp2->next;
+                temp2->next = NULL;
                 delete temp2;
-            }           
+                temp = head;
+                deleted = true;
+            }   
         }
 
-        
-        
-            temp = temp->next;
+
+            if (!deleted) 
+                temp = temp->next; // only go next if nothing to delete, if u deleting shit, it'd move on from head and th en u cant compare head value
+                                    // test case 1: 3 3 3 4 5 5
             // temp2=temp2->next;
-            // link = link->next;
+            //link = link->next;
     }
     return llist;
+    
+    // holy FUCK this took way too long and ts can NOT be less optimized
 }
 
 int main()
